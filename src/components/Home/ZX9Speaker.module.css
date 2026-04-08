@@ -1,0 +1,106 @@
+.wrapper {
+  position: relative;
+  background-color: #d87d4a;
+  border-radius: 8px;
+  padding: 2rem 0rem;
+  margin: 0 auto 6rem auto;
+  width: 85%;
+
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+/* PATTERN */
+.pattern {
+  position: absolute;
+  inset-block-start: 0;
+  left: 0;
+  right: 0;
+  opacity: 1;
+  z-index: 0;
+}
+
+/* IMAGE */
+.imageWrapper {
+  position: relative;
+  z-index: 1;
+  bottom: -3rem;
+}
+
+.image {
+  max-width: 350px;
+  width: 400px;
+  height: 450px;
+}
+
+/* CONTENT */
+.content {
+  position: relative;
+  z-index: 1;
+  color: white;
+  max-width: 350px;
+}
+
+.title {
+  font-size: 3.5rem;
+  margin-bottom: 2rem;
+}
+
+.description {
+  opacity: 0.8;
+  margin-bottom: 2rem;
+  line-height: 2rem;
+}
+
+/* BUTTON */
+.button {
+  background-color: black;
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.button:hover {
+  background-color: #333;
+}
+
+/* 📱 TABLET */
+@media (max-width: 1024px) {
+  .wrapper {
+    flex-direction: column;
+    text-align: center;
+    gap: 5rem;
+    padding: 4rem 2rem;
+  }
+
+  .imageWrapper {
+    bottom: 0;
+  }
+
+  .image {
+   max-width: 250px;
+   height: auto;
+  }
+}
+
+/* 📱 MOBILE */
+@media (max-width: 600px) {
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .wrapper {
+    padding: 3rem 1.5rem;
+  }
+
+  .image {
+   max-width: 250px;
+   height: auto;
+  }
+
+
+}
