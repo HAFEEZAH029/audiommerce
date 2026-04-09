@@ -1,4 +1,5 @@
 import styles from "./YX1Earphones.module.css";
+import Link from "next/link";
 
 export default function YX1Earphones() {
   return (
@@ -15,7 +16,9 @@ export default function YX1Earphones() {
       {/* CONTENT */}
       <div className={styles.content}>
         <h2>YX1 EARPHONES</h2>
-        <button className={styles.button}>SEE PRODUCT</button>
+        <Link href={`/earphones/yx1-earphones`} className={styles.button}>
+          SEE PRODUCT
+        </Link>
       </div>
     </section>
   );

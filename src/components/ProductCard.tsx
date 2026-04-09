@@ -8,6 +8,7 @@ interface ProductCardProps {
     tablet: string;
     desktop: string;
   };
+  category: string;
   isNew?: boolean;
   name: string;
   description: string;
@@ -17,6 +18,7 @@ interface ProductCardProps {
 
 export default function ProductCard({
   images,
+  category,
   isNew,
   name,
   description,
@@ -44,7 +46,7 @@ export default function ProductCard({
         {isNew && <p className={styles.newProduct}>NEW PRODUCT</p>}
         <h2 className={styles.title}>{name}</h2>
         <p className={styles.description}>{description}</p>
-        <Link href={`/products/${slug}`} className={styles.cta}>
+        <Link href={`/${category}/${slug}`} className={styles.cta}>
           SEE PRODUCT
         </Link>
       </div>
