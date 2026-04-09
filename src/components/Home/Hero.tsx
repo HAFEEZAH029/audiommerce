@@ -1,5 +1,6 @@
 import Image from "next/image";
 import styles from "./Hero.module.css";
+import Link from "next/link";
 
 const images = {
   mobile: "/assets/home/mobile/image-header.jpg",
@@ -39,7 +40,9 @@ export default function Hero() {
           for the passionate music enthusiast.
         </p>
 
-        <button className={styles.button}>SEE PRODUCT</button>
+        <Link href={`/headphones/xx99-mark-two-headphones`} className={styles.button}>
+          SEE PRODUCT
+        </Link>
       </div>
     </section>
   );

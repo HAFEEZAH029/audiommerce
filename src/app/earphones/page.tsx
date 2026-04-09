@@ -13,13 +13,14 @@ const page = () => {
         },
         name: "YX1 WIRELESS EARPHONES",
         description: "Tailor your listening experience with bespoke dynamic drivers from the new YX1 Wireless Earphones. Enjoy incredible high-fidelity sound even in noisy environments with its active noise cancellation feature.",
-        slug: "yx1-earphones"
+        slug: "yx1-earphones",
+        category: "earphones"
     }
 
   return (
     <div>
       <Banner title="EARPHONES" />
-      <ProductCard images={yx1.images} name={yx1.name} description={yx1.description} slug={yx1.slug} isNew />
+      <ProductCard images={yx1.images} name={yx1.name} description={yx1.description} slug={yx1.slug} category={yx1.category} isNew />
       <Category />
       <Assurance />
     </div>

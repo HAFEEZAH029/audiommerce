@@ -1,5 +1,6 @@
 import Image from "next/image";
 import styles from "./ZX9Speaker.module.css";
+import Link from "next/link";
 
 const images = {
   mobile: "/assets/home/mobile/image-speaker-zx9.png",
@@ -44,7 +45,9 @@ export default function ZX9Speaker() {
           truly remarkable sound.
         </p>
 
-        <button className={styles.button}>SEE PRODUCT</button>
+        <Link href={`/speakers/zx9-speaker`} className={styles.button}>
+          SEE PRODUCT
+        </Link>
       </div>
     </section>
   );

@@ -1,0 +1,111 @@
+.container {
+  padding: 2rem 1.5rem;
+}
+
+.goBack {
+  background: none;
+  border: none;
+  color: #7d7d7d;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  cursor: pointer;
+  transition: all 0.5s ease;
+}
+
+.goBack:hover {
+  color: var(--primary)
+}
+
+/* Layout */
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Image */
+.imageContainer {
+  position: relative;
+  height: 560px;
+  border-radius: 8px;
+  background-color: #f1f1f1;
+}
+
+.image {
+  object-fit: contain;
+}
+
+/* Content */
+.content h1 {
+  font-size: 2rem;
+  margin: 1rem 0;
+}
+
+.new {
+  color: #d87d4a;
+  letter-spacing: 8px;
+  font-size: 0.8rem;
+}
+
+.description {
+  color: #7d7d7d;
+  line-height: 1.6;
+}
+
+.price {
+  font-weight: bold;
+  margin: 1rem 0;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.quantity {
+  display: flex;
+  align-items: center;
+  background: #f1f1f1;
+  padding: 0.5rem 1rem;
+  gap: 1rem;
+}
+
+.quantity button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.addToCart {
+  background: #d87d4a;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  cursor: pointer;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .wrapper {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .imageContainer,
+  .content {
+    flex: 1;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .container {
+    padding: 4rem 6rem;
+  }
+
+  .content h1 {
+    font-size: 2.5rem;
+  }
+}

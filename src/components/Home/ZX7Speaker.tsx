@@ -1,5 +1,6 @@
 import Image from "next/image";
 import styles from "./ZX7Speaker.module.css";
+import Link from "next/link";
 
 const images = {
   mobile: "/assets/home/mobile/image-speaker-zx7.jpg",
@@ -28,7 +29,9 @@ export default function ZX7Speaker() {
       {/* CONTENT */}
       <div className={styles.content}>
         <h2>ZX7 SPEAKER</h2>
-        <button className={styles.button}>SEE PRODUCT</button>
+        <Link href={`/speakers/zx7-speaker`} className={styles.button}>
+          SEE PRODUCT
+        </Link>
       </div>
     </section>
   );

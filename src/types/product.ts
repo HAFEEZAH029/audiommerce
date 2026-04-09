@@ -1,4 +1,5 @@
- type bonus = {
+
+type bonus = {
     quantity: number;
     item: string;
  }
@@ -13,11 +14,13 @@
     };
  }
 
-type Product = {
+export type Product = {
   id: number;
   slug: string;
   name: string;
+  new: boolean;
   description: string;
+  category: string;
   price: number;
   image: {
     mobile: string;
@@ -26,7 +29,7 @@ type Product = {
   };
   features: string;
   includes: bonus[];
-  galery: {
+  gallery: {
     first: {
       mobile: string;
       tablet: string;
@@ -45,16 +48,3 @@ type Product = {
   };
   others: extras[];
 };
-
-const fetchSim = async (slug: string): Promise<Product | undefined> => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    const response = await fetch ('./data.json');
-
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data: Product[] = await response.json();
-    return data.find((product) => product.slug === slug);
-}
