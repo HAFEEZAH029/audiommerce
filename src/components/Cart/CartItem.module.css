@@ -1,0 +1,46 @@
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.left {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.imgBox {
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.name {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.price {
+  color: #7d7d7d;
+  font-size: 0.8rem;
+}
+
+.controls {
+  display: flex;
+  background: #f1f1f1;
+  padding: 0.5rem;
+  gap: 1rem;
+}
+
+.controls button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}

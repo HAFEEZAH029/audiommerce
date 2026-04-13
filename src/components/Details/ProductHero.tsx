@@ -3,8 +3,12 @@
 import styles from "./ProductHero.module.css";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useDispatch}  from "react-redux";
+import { addToCart, increaseQuantity, decreaseQuantity } from "@/store/cartSlice";
+import { AppDispatch } from "@/store/redux";
 
 type Product = {
+  id: number;
   slug: string;
   name: string;
   description: string;
@@ -19,6 +23,25 @@ type Product = {
 
 export default function ProductHero({ product }: { product: Product }) {
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();//we do not necessarily need to add the AppDispatch here.
+
+  function handleAddToCart() {
+    dispatch(addToCart({
+      id: product.id,
+      name: product.name.split(" ")[0], // Just the first word for brevity
+      price: product.price,
+      image: product.image.mobile, // You might want to choose the image based on screen size
+      quantity: 1,
+    }));
+  }
+
+  function handleIncrease() {
+    dispatch(increaseQuantity(product.id));
+  }
+
+  function handleDecrease() {
+    dispatch(decreaseQuantity(product.id));
+  }
 
   return (
     <section className={styles.container}>
@@ -50,12 +73,12 @@ export default function ProductHero({ product }: { product: Product }) {
           {/* Quantity + Button (basic for now) */}
           <div className={styles.actions}>
             <div className={styles.quantity}>
-              <button>-</button>
+              <button onClick={handleDecrease}>-</button>
               <span>1</span>
-              <button>+</button>
+              <button onClick={handleIncrease}>+</button>
             </div>
 
-            <button className={styles.addToCart}>ADD TO CART</button>
+            <button className={styles.addToCart} onClick={handleAddToCart}>ADD TO CART</button>
           </div>
         </div>
       </div>
