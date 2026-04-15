@@ -13,7 +13,7 @@ export default function Error({ error, reset }: Props) {
   }, [error]);
 
   return (
-    <div style={{ textAlign: "center", padding: "4rem 1.5rem", marginBottom: "2rem" }}>
+    <div style={{ textAlign: "center", padding: "4rem 1.5rem", marginBottom: "12rem", marginTop: "10rem" }}>
       <h2>Something went wrong</h2>
       <p style={{ marginBottom: "1.5rem",marginTop: "0.8rem" }}>
         An unexpected error occurred. Please try again.

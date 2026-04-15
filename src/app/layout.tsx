@@ -29,7 +29,7 @@ export default function RootLayout({
           <Navigation />
           {children}
           <Footer />
-          <div id="modal" />
+          <div id="modal" ></div>
         </StoreProvider>
       </body>
     </html>
