@@ -1,10 +1,15 @@
 "use client";
+
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 import styles from "./Navigation.module.css";
 import CartModal from "./Cart/CartModal";
 import { useSelector } from "react-redux";
 import { selectTotalQuantity, selectCartItems } from "@/store/cartSelectors";
+import { useCurrentUser } from "@/util/useCurrentUser";
+import { logout } from "@/lib/logout";
+
 
 
 
@@ -15,7 +20,7 @@ export default function Navigation() {
   const pathname = usePathname();
   const totalQuantity = useSelector(selectTotalQuantity);
   const cartItems = useSelector(selectCartItems);
-
+  const { user, loading } = useCurrentUser();
 
 
   const links = [
@@ -29,6 +34,10 @@ export default function Navigation() {
   function handleCartOpen() {
     if (cartItems.length === 0) return; // Prevent opening the cart if it's empty
     setCartOpen(true);
+  }
+
+  if (loading) {
+    return null; // or a loading spinner
   }
 
 
@@ -52,19 +61,23 @@ export default function Navigation() {
         {/* Desktop Links */}
         <nav className={styles.nav}>
           {links.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
-              className={pathname === link.href ? styles.active : undefined}
+              className={pathname === link.href ? styles.active : styles.link}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
         {/* Right Section */}
         <div className={styles.right}>
-          <button className={styles.signup}>Sign Up</button>
+          {user ? (
+            <span className={styles.user}>Hello, {user.name} <form action={logout} className={styles.logoutForm}><button className={styles.logout}>Logout</button></form></span>
+          ) : (
+            <Link href="/auth" className={styles.signup}>Sign Up</Link>
+          )}
           <button className={styles.cart} onClick={handleCartOpen}>🛒 {totalQuantity > 0 && <sup className={styles.sup}>{totalQuantity}</sup>}</button>
         </div>
       </div>
@@ -75,18 +88,28 @@ export default function Navigation() {
       {menuOpen && (
         <div className={styles.mobileMenu}>
           {links.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
-              className={pathname === link.href ? styles.active : undefined}
+              className={pathname === link.href ? styles.active : styles.link}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
-          <button className={styles.mobileSignup}>Sign Up</button>
+          {user ? (
+            <form action={logout} className={styles.logoutForm}>
+              <button className={styles.mobileCta}>Logout</button>
+            </form>
+          ) : (
+            <Link href="/auth" className={styles.mobileCta}>Sign Up</Link>
+          )}
         </div>
       )}
     </header>
   );
 
 }
+
+
+
+

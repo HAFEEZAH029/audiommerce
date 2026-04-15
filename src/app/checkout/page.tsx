@@ -9,18 +9,16 @@ import { useRouter } from "next/navigation";
 import { submitCheckout } from "@/lib/action";
 import { useActionState, useEffect, useState } from "react";
 import SuccessModal from "@/components/Success/SuccessModal";
-
-
-
+import { useCurrentUser } from "@/util/useCurrentUser";
 
 export default function CheckoutPage() {
-
   const cartItems = useSelector(selectCartItems);
   const totalPrice = useSelector(selectTotalPrice);
   const router = useRouter();
   const dispatch = useDispatch();
+  const { user, loading } = useCurrentUser();
 
-  // Persist success state after form reset
+  // Keep hook order stable across all renders.
   const initialState = {
     success: false,
     errors: {},
@@ -30,28 +28,39 @@ export default function CheckoutPage() {
   const [state, formAction] = useActionState(submitCheckout, initialState);
 
   useEffect(() => {
+    if (!loading && !user) {
+      router.push("/auth?mode=login");
+    }
+  }, [user, loading, router]); // ensure redirect happens only after auth state resolves
+
+  useEffect(() => {
     if (state?.success) {
       setShowSuccess(true);
     }
-  }, [state?.success, dispatch]);
+  }, [state?.success]);
 
+  if (loading || !user) {
+    return <p>Checking authentication...</p>;
+  }
 
   const shipping = 50;
   const vat = totalPrice * 0.2; // 20% VAT
   const grandTotal = totalPrice + shipping + vat;
 
-
   return (
     <main className={styles.container}>
-      <button className={styles.goBack} onClick={() => router.back()}>Go Back</button>
+      <button className={styles.goBack} onClick={() => router.back()}>
+        Go Back
+      </button>
 
-      <SuccessModal open={showSuccess} onClose={() => {
-        setShowSuccess(false);
-        dispatch(removeAll());
-        router.push("/");
-
-      }} />
-
+      <SuccessModal
+        open={showSuccess}
+        onClose={() => {
+          setShowSuccess(false);
+          dispatch(removeAll());
+          router.push("/");
+        }}
+      />
 
       <div className={styles.wrapper}>
         {/* LEFT - FORM */}
@@ -63,22 +72,40 @@ export default function CheckoutPage() {
             <h3>Billing Details</h3>
 
             <div className={styles.grid2}>
-                <div>
-                  <input name="name" placeholder="Name" className={styles.input} defaultValue={state?.enteredData?.name} required />
-                  {state?.errors?.name && (
-                    <p className={styles.error}>{state.errors.name}</p>
-                  )}
-                </div>
-                <div>
-                  <input name="email" placeholder="Email Address" className={styles.input} defaultValue={state?.enteredData?.email} required />
-                  {state?.errors?.email && (
-                    <p className={styles.error}>{state.errors.email}</p>
-                  )}
-                </div>
+              <div>
+                <input
+                  name="name"
+                  placeholder="Name"
+                  className={styles.input}
+                  defaultValue={state?.enteredData?.name}
+                  required
+                />
+                {state?.errors?.name && (
+                  <p className={styles.error}>{state.errors.name}</p>
+                )}
+              </div>
+              <div>
+                <input
+                  name="email"
+                  placeholder="Email Address"
+                  className={styles.input}
+                  defaultValue={state?.enteredData?.email}
+                  required
+                />
+                {state?.errors?.email && (
+                  <p className={styles.error}>{state.errors.email}</p>
+                )}
+              </div>
             </div>
 
             <div>
-              <input name="phone" placeholder="Phone Number" className={styles.inputhalf} defaultValue={state?.enteredData?.phone} required />
+              <input
+                name="phone"
+                placeholder="Phone Number"
+                className={styles.inputhalf}
+                defaultValue={state?.enteredData?.phone}
+                required
+              />
               {state?.errors?.phone && (
                 <p className={styles.error}>{state.errors.phone}</p>
               )}
@@ -90,7 +117,13 @@ export default function CheckoutPage() {
             <h3>Shipping Info</h3>
 
             <div>
-              <input name="address" placeholder="Your Address" className={styles.inputfull} defaultValue={state?.enteredData?.address} required />
+              <input
+                name="address"
+                placeholder="Your Address"
+                className={styles.inputfull}
+                defaultValue={state?.enteredData?.address}
+                required
+              />
               {state?.errors?.address && (
                 <p className={styles.error}>{state.errors.address}</p>
               )}
@@ -98,13 +131,25 @@ export default function CheckoutPage() {
 
             <div className={styles.grid2}>
               <div>
-                <input name="zip" placeholder="ZIP Code" className={styles.input} defaultValue={state?.enteredData?.zip} required />
+                <input
+                  name="zip"
+                  placeholder="ZIP Code"
+                  className={styles.input}
+                  defaultValue={state?.enteredData?.zip}
+                  required
+                />
                 {state?.errors?.zip && (
                   <p className={styles.error}>{state.errors.zip}</p>
                 )}
               </div>
               <div>
-                <input name="city" placeholder="City" className={styles.input} defaultValue={state?.enteredData?.city} required />
+                <input
+                  name="city"
+                  placeholder="City"
+                  className={styles.input}
+                  defaultValue={state?.enteredData?.city}
+                  required
+                />
                 {state?.errors?.city && (
                   <p className={styles.error}>{state.errors.city}</p>
                 )}
@@ -112,7 +157,13 @@ export default function CheckoutPage() {
             </div>
 
             <div>
-              <input name="country" placeholder="Country" className={styles.inputhalf} defaultValue={state?.enteredData?.country} required />
+              <input
+                name="country"
+                placeholder="Country"
+                className={styles.inputhalf}
+                defaultValue={state?.enteredData?.country}
+                required
+              />
               {state?.errors?.country && (
                 <p className={styles.error}>{state.errors.country}</p>
               )}
@@ -129,12 +180,12 @@ export default function CheckoutPage() {
               <div className={styles.payment}>
                 <label>
                   <input type="radio" name="payment" value="e-money" defaultChecked />
-                    e-Money
+                  e-Money
                 </label>
 
                 <label>
-                  <input type="radio" name="payment" value="cash"  />
-                    Cash on Delivery
+                  <input type="radio" name="payment" value="cash" />
+                  Cash on Delivery
                 </label>
               </div>
             </div>
@@ -143,7 +194,14 @@ export default function CheckoutPage() {
               <div className={styles.eMoneyFields}>
                 <label>e-Money Number</label>
                 <div>
-                  <input name="eNum" placeholder="e-Money Number" className={styles.input} type="text" defaultValue={state?.enteredData?.eNumber} required />
+                  <input
+                    name="eNum"
+                    placeholder="e-Money Number"
+                    className={styles.input}
+                    type="text"
+                    defaultValue={state?.enteredData?.eNumber}
+                    required
+                  />
                   {state?.errors?.eNumber && (
                     <p className={styles.error}>{state.errors.eNumber}</p>
                   )}
@@ -153,7 +211,14 @@ export default function CheckoutPage() {
               <div className={styles.eMoneyFields}>
                 <label>e-Money PIN</label>
                 <div>
-                  <input name="ePin" placeholder="e-Money PIN" className={styles.input} type="text" defaultValue={state?.enteredData?.ePin} required />
+                  <input
+                    name="ePin"
+                    placeholder="e-Money PIN"
+                    className={styles.input}
+                    type="text"
+                    defaultValue={state?.enteredData?.ePin}
+                    required
+                  />
                   {state?.errors?.ePin && (
                     <p className={styles.error}>{state.errors.ePin}</p>
                   )}
@@ -188,20 +253,20 @@ export default function CheckoutPage() {
 
           <div className={styles.totals}>
             <p>
-              Total <span style={{fontWeight: "bold"}}>$ {totalPrice}</span>
+              Total <span style={{ fontWeight: "bold" }}>$ {totalPrice}</span>
             </p>
             <p>
-              Shipping <span style={{fontWeight: "bold"}}>$ {shipping}</span>
+              Shipping <span style={{ fontWeight: "bold" }}>$ {shipping}</span>
             </p>
             <p>
-              VAT (Included) <span style={{fontWeight: "bold"}}>$ {vat.toFixed(2)}</span>
+              VAT (Included) <span style={{ fontWeight: "bold" }}>$ {vat.toFixed(2)}</span>
             </p>
             <p className={styles.grand}>
               Grand Total <span>$ {grandTotal}</span>
             </p>
           </div>
 
-          <button className={styles.payBtn} type="submit" form="checkout-form" >
+          <button className={styles.payBtn} type="submit" form="checkout-form">
             CONTINUE & PAY
           </button>
         </div>
