@@ -1,43 +1,37 @@
-import { useEffect, useState } from "react";
+'use client';
 
-export function useCurrentUser() {
-  const [user, setUser] = useState<{ id: string; email: string; name: string } | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+import { useState, useEffect } from 'react';
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+}
+
+interface UseCurrentUserReturn {
+  user: User | null;
+  loading: boolean;
+}
+
+export function useCurrentUser(): UseCurrentUserReturn {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let isMounted = true;
-
-    async function fetchUser() {
+    const fetchUser = async () => {
       try {
-        const res = await fetch("/api/me", { cache: "no-store" });
-
-        if (!res.ok) {
-          throw new Error(`Failed to fetch current user: ${res.status}`);
-        }
-
-        const data = await res.json();
-
-        if (isMounted) {
-          setUser(data.user ?? null);
-        }
+        const response = await fetch('/api/me');
+        const data = await response.json();
+        setUser(data.user);
       } catch (error) {
-        console.error("Failed to load current user", error);
-
-        if (isMounted) {
-          setUser(null);
-        }
+        console.error('Failed to fetch user:', error);
+        setUser(null);
       } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
+        setLoading(false);
       }
-    }
+    };
 
     fetchUser();
-
-    return () => {
-      isMounted = false;
-    };
   }, []);
 
   return { user, loading };

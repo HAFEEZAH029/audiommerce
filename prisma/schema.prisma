@@ -18,6 +18,8 @@ model User {
   password  String
   createdAt DateTime  @default(now())
   sessions  Session[]
+  cart      Cart?
+  orders    Order[]
 }
 
 model Session {
@@ -26,4 +28,79 @@ model Session {
   user      User     @relation(fields: [userId], references: [id])
   expiresAt DateTime
   createdAt DateTime @default(now())
+}
+
+model Cart {
+  id        String     @id @default(cuid())
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id])
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id        String  @id @default(cuid())
+  cartId    String
+  cart      Cart    @relation(fields: [cartId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+  quantity  Int
+
+  createdAt DateTime @default(now())
+
+  @@unique([cartId, productId])
+}
+
+model Product {
+  id            Int         @id
+  slug          String      @unique
+  name          String
+  price         Int
+  image         Json
+  description   String
+  new           Boolean
+  category      String
+  categoryImage Json
+  features      String
+  includes      Json
+  gallery       Json
+  others        Json
+  cartItems     CartItem[]
+  orderItems    OrderItem[]
+}
+
+model Order {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  customerName String
+  email        String
+  phone        String
+  address      String
+  zip          String
+  city         String
+  country      String
+
+  paymentMethod String
+
+  grandTotal Int
+
+  createdAt DateTime @default(now())
+
+  items OrderItem[]
+}
+
+model OrderItem {
+  id String @id @default(cuid())
+
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id])
+
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+
+  quantity Int
+  price    Int
 }

@@ -126,6 +126,12 @@
   margin-bottom: 0.7rem;
 }
 
+.carterror {
+  color: red;
+  font-size: 0.8rem;
+  margin-top:1rem ;
+}
+
 /* SUMMARY */
 .summary {
   flex: 1;

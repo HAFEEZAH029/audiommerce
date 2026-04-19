@@ -27,6 +27,11 @@ export type Product = {
     tablet: string;
     desktop: string;
   };
+  categoryImage: {
+    mobile: string;
+    tablet: string;
+    desktop: string;
+  };
   features: string;
   includes: bonus[];
   gallery: {

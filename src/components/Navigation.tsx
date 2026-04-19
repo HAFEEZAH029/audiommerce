@@ -1,26 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition} from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import styles from "./Navigation.module.css";
 import CartModal from "./Cart/CartModal";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch} from "react-redux";
 import { selectTotalQuantity, selectCartItems } from "@/store/cartSelectors";
+import { removeAll } from "@/store/cartSlice";
 import { useCurrentUser } from "@/util/useCurrentUser";
 import { logout } from "@/lib/logout";
 
 
+type Props = {
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  } | null;
+};
 
 
-export default function Navigation() {
+export default function Navigation({ user }: Props) {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const pathname = usePathname();
   const totalQuantity = useSelector(selectTotalQuantity);
   const cartItems = useSelector(selectCartItems);
-  const { user, loading } = useCurrentUser();
+  const dispatch = useDispatch();
+  const { loading } = useCurrentUser();
+  const [isPending, startTransition] = useTransition();
+
+
+
 
 
   const links = [
@@ -35,6 +48,16 @@ export default function Navigation() {
     if (cartItems.length === 0) return; // Prevent opening the cart if it's empty
     setCartOpen(true);
   }
+
+
+  const handleLogout = () => {
+  dispatch(removeAll());
+
+  // 2. Execute the Server Action inside a transition
+  startTransition(async () => {
+    await logout();
+  });
+};
 
   if (loading) {
     return null; // or a loading spinner
@@ -74,7 +97,9 @@ export default function Navigation() {
         {/* Right Section */}
         <div className={styles.right}>
           {user ? (
-            <span className={styles.user}>Hello, {user.name} <form action={logout} className={styles.logoutForm}><button className={styles.logout}>Logout</button></form></span>
+            <span className={styles.user}>Hello, {user.name} <button className={styles.logout} onClick={handleLogout} disabled={isPending}>
+              {isPending ? "Logging out..." : "Logout"}
+            </button></span>
           ) : (
             <Link href="/auth" className={styles.signup}>Sign Up</Link>
           )}
@@ -97,9 +122,9 @@ export default function Navigation() {
             </Link>
           ))}
           {user ? (
-            <form action={logout} className={styles.logoutForm}>
-              <button className={styles.mobileCta}>Logout</button>
-            </form>
+            <button className={styles.mobileCta} onClick={handleLogout} disabled={isPending}>
+              {isPending ? "Logging out..." : "Logout"}
+            </button>
           ) : (
             <Link href="/auth" className={styles.mobileCta}>Sign Up</Link>
           )}

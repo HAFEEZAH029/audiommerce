@@ -6,6 +6,12 @@ import { useRouter } from "next/navigation";
 import { useDispatch}  from "react-redux";
 import { addToCart, increaseQuantity, decreaseQuantity } from "@/store/cartSlice";
 import { AppDispatch } from "@/store/redux";
+import { addToCartDB } from "@/lib/cart-actions";
+import { useCurrentUser } from "@/util/useCurrentUser";
+import { increaseCartItem, decreaseCartItem } from "@/lib/cart-actions";
+
+
+
 
 type Product = {
   id: number;
@@ -24,8 +30,15 @@ type Product = {
 export default function ProductHero({ product }: { product: Product }) {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();//we do not necessarily need to add the AppDispatch here.
+  const { user } = useCurrentUser();
 
-  function handleAddToCart() {
+
+  async function handleAddToCart() {
+    if (!user) {
+      router.push("/auth?mode=login");
+      return;
+    }
+
     dispatch(addToCart({
       id: product.id,
       name: product.name.split(" ")[0], // Just the first word for brevity
@@ -33,15 +46,34 @@ export default function ProductHero({ product }: { product: Product }) {
       image: product.image.mobile, // You might want to choose the image based on screen size
       quantity: 1,
     }));
-  }
 
-  function handleIncrease() {
+    // Also add to DB
+    try {
+    await addToCartDB(product.id);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+  async function handleIncrease() {
     dispatch(increaseQuantity(product.id));
-  }
 
-  function handleDecrease() {
-    dispatch(decreaseQuantity(product.id));
+    try {
+    await increaseCartItem(product.id);
+  } catch (error) {
+    console.error(error);
   }
+}
+
+  async function handleDecrease() {
+    dispatch(decreaseQuantity(product.id));
+
+    try {
+    await decreaseCartItem(product.id);
+  } catch (error) {
+    console.error(error);
+  }
+}
 
   return (
     <section className={styles.container}>
