@@ -11,6 +11,7 @@ import {
 } from "@/store/cartSelectors";
 import { removeAll } from "@/store/cartSlice";
 import Link from "next/link";
+import { clearCart } from "@/lib/cart-actions";
 
 type Props = {
   open: boolean;
@@ -21,8 +22,18 @@ export default function CartModal({ open, onClose }: Props) {
   const items = useSelector(selectCartItems);
   const totalPrice = useSelector(selectTotalPrice);
   const totalQuantity = useSelector(selectTotalQuantity);
-
   const dispatch = useDispatch();
+
+  async function handleRemoveAll() {
+    dispatch(removeAll());
+
+    try{
+       await  clearCart(); // Clear cart in DB
+    } catch (error) {
+      console.error("Failed to clear cart in DB:", error);
+    } 
+  }
+
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -30,7 +41,7 @@ export default function CartModal({ open, onClose }: Props) {
         {/* Header */}
         <div className={styles.header}>
           <h2>CART ({totalQuantity})</h2>
-          <button onClick={() => dispatch(removeAll())}>
+          <button onClick={handleRemoveAll} disabled={totalQuantity === 0}>
             Remove all
           </button>
         </div>

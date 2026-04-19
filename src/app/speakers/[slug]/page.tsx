@@ -1,6 +1,6 @@
 import ProductHero from "@/components/Details/ProductHero";
 import ProductFeatures from "@/components/Details/ProductFeatures";
-import { fetchProductBySlug } from "@/util/fetchSim";
+import { getProduct } from "@/util/fetch-actions";
 import { notFound } from "next/navigation";
 import ProductGallery from "@/components/Details/ProductGallery";
 import ProdRec from "@/components/Details/ProdRec";
@@ -13,7 +13,7 @@ type Props = {
 
 export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
-  const product = await fetchProductBySlug(slug);
+  const product = await getProduct(slug);
 
   if (!product) {
     notFound();

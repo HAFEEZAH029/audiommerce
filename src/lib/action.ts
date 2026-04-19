@@ -1,5 +1,10 @@
 "use server";
 
+import { prisma } from "./prisma";
+import { getCurrentUser } from "./getUser";
+
+
+
 type FormState = {
   errors?: Record<string, string>;
   success?: boolean;
@@ -58,6 +63,72 @@ export async function submitCheckout(
   }
 
   // SUCCESS (later: save order, clear cart, etc.)
-  return { success: true };
+  const currentUser = await getCurrentUser();
+
+if (!currentUser) {
+  return {
+    errors: {
+      auth: "Please login first",
+    },
+    enteredData: user,
+  };
+}
+
+const cart = await prisma.cart.findUnique({
+  where: { userId: currentUser.id },
+  include: {
+    items: {
+      include: {
+        product: true,
+      },
+    },
+  },
+});
+
+if (!cart || cart.items.length === 0) {
+  return {
+    errors: {
+      cart: "Your cart is empty",
+    },
+    enteredData: user,
+  };
+}
+
+const grandTotal = cart.items.reduce((total, item) => {
+  return total + item.product.price * item.quantity;
+}, 0);
+
+await prisma.order.create({
+  data: {
+    userId: currentUser.id,
+
+    customerName: user.name,
+    email: user.email,
+    phone: user.phone,
+    address: user.address,
+    zip: user.zip,
+    city: user.city,
+    country: user.country,
+
+    paymentMethod: user.payment,
+    grandTotal,
+
+    items: {
+      create: cart.items.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        price: item.product.price,
+      })),
+    },
+  },
+});
+
+await prisma.cartItem.deleteMany({
+  where: {
+    cartId: cart.id,
+  },
+});
+
+return { success: true };
 }
 

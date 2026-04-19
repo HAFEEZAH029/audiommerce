@@ -16,7 +16,6 @@ type Props = {
 export default function SuccessModal({ open, onClose }: Props) {
   const cartItems = useSelector(selectCartItems);
   const total = useSelector(selectTotalPrice);
-  const router = useRouter();
 
   const firstItem = cartItems[0];
   const remainingCount = cartItems.length - 1;
