@@ -21,7 +21,8 @@ export async function getCart() {
   });
 
   // Transform to match Redux CartItem type
-  return cart?.items.map(item => ({
+  const items = cart?.items ?? [];
+  return items.map((item: typeof items[number]) => ({
     id: item.product.id,
     name: item.product.name,
     price: item.product.price,
