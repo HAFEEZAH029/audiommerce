@@ -5,6 +5,7 @@ import NavbarServer from "@/components/NavServer";
 import Footer from "@/components/Footer";
 import StoreProvider from "@/store/StoreProvider";
 import GetCart from "@/components/GetCart";
+import { getCurrentUser } from "@/lib/getUser";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -18,16 +19,18 @@ export const metadata: Metadata = {
   description: "An e-commerce platform for audio products built with a complete checkout system",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getCurrentUser();
+
   return (
     <html lang="en" className={manrope.variable}>
       <body className={manrope.variable}>
         <StoreProvider>
-          <GetCart />
+          <GetCart userId={user?.id ?? null} />
           <NavbarServer />
           {children}
           <Footer />
