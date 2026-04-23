@@ -1,18 +1,10 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
 import "./globals.css";
 import NavbarServer from "@/components/NavServer";
 import Footer from "@/components/Footer";
 import StoreProvider from "@/store/StoreProvider";
 import GetCart from "@/components/GetCart";
 import { getCurrentUser } from "@/lib/getUser";
-
-const manrope = Manrope({
-  variable: "--font-manrope",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400", "500", "700"],
-});
 
 export const metadata: Metadata = {
   title: "Audiommerce",
@@ -27,8 +19,8 @@ export default async function RootLayout({
   const user = await getCurrentUser();
 
   return (
-    <html lang="en" className={manrope.variable}>
-      <body className={manrope.variable}>
+    <html lang="en">
+      <body>
         <StoreProvider>
           <GetCart userId={user?.id ?? null} />
           <NavbarServer />

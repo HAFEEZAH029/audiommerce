@@ -1,5 +1,6 @@
 "use server";
 
+import { Prisma } from "@prisma/client";
 import { prisma } from "./prisma";
 import { getCurrentUser } from "./getUser";
 
@@ -10,6 +11,16 @@ type FormState = {
   success?: boolean;
   enteredData?: Record<string, string>;
 };
+
+type CartWithItems = Prisma.CartGetPayload<{
+  include: {
+    items: {
+      include: {
+        product: true;
+      };
+    };
+  };
+}>;
 
 export async function submitCheckout(
   prevState: FormState,
@@ -74,7 +85,7 @@ if (!currentUser) {
   };
 }
 
-const cart = await prisma.cart.findUnique({
+const cart: CartWithItems | null = await prisma.cart.findUnique({
   where: { userId: currentUser.id },
   include: {
     items: {
@@ -94,7 +105,7 @@ if (!cart || cart.items.length === 0) {
   };
 }
 
-const grandTotal = cart.items.reduce((total, item) => {
+const grandTotal = cart.items.reduce((total: number, item) => {
   return total + item.product.price * item.quantity;
 }, 0);
 
