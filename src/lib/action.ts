@@ -1,6 +1,5 @@
 "use server";
 
-import { Prisma } from "@prisma/client";
 import { prisma } from "./prisma";
 import { getCurrentUser } from "./getUser";
 
@@ -12,15 +11,18 @@ type FormState = {
   enteredData?: Record<string, string>;
 };
 
-type CartWithItems = Prisma.CartGetPayload<{
-  include: {
-    items: {
-      include: {
-        product: true;
-      };
-    };
+type CartItemWithProduct = {
+  productId: number;
+  quantity: number;
+  product: {
+    price: number;
   };
-}>;
+};
+
+type CartWithItems = {
+  id: string;
+  items: CartItemWithProduct[];
+};
 
 export async function submitCheckout(
   prevState: FormState,
@@ -85,7 +87,7 @@ if (!currentUser) {
   };
 }
 
-const cart: CartWithItems | null = await prisma.cart.findUnique({
+const cart = (await prisma.cart.findUnique({
   where: { userId: currentUser.id },
   include: {
     items: {
@@ -94,7 +96,7 @@ const cart: CartWithItems | null = await prisma.cart.findUnique({
       },
     },
   },
-});
+})) as CartWithItems | null;
 
 if (!cart || cart.items.length === 0) {
   return {
@@ -105,7 +107,7 @@ if (!cart || cart.items.length === 0) {
   };
 }
 
-const grandTotal = cart.items.reduce((total: number, item) => {
+const grandTotal = cart.items.reduce((total: number, item: CartItemWithProduct) => {
   return total + item.product.price * item.quantity;
 }, 0);
 
@@ -125,7 +127,7 @@ await prisma.order.create({
     grandTotal,
 
     items: {
-      create: cart.items.map((item) => ({
+      create: cart.items.map((item: CartItemWithProduct) => ({
         productId: item.productId,
         quantity: item.quantity,
         price: item.product.price,
