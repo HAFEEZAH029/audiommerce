@@ -1,0 +1,61 @@
+.container {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 3rem auto;
+}
+
+.form {
+  background: #f2f2f2;
+  padding: 2rem 1.5rem;
+  width: 40%;
+  border-radius: 10px;
+}
+
+.form h2 {
+  margin-bottom: 1.5rem;
+}
+
+.form input {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.error {
+  color: red;
+  font-size: 0.75rem;
+  margin-bottom: 0.8rem;
+}
+
+.success {
+  color: green;
+  font-size: 0.85rem;
+  margin-top: 1rem;
+}
+
+.checkin {
+  width: 100%;
+  padding: 1rem;
+  background: #d87d4a;
+  font-size: 1rem;
+  color: white;
+  border: none;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+
+.switch {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+
+.switch span {
+  color: #d87d4a;
+  cursor: pointer;
+  font-weight: bold;
+}

@@ -1,0 +1,17 @@
+.dialog {
+  border: none;
+  border-radius: 8px;
+  padding: 0;
+  background: transparent;
+  position: fixed;
+  top: 5.5rem;
+  right: 1.5rem;
+  left: auto;
+  margin: 0;
+  max-width: 26rem;
+  width: calc(100vw - 3rem);
+}
+
+.dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}

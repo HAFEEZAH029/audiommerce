@@ -1,12 +1,22 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  --primary: #d87d4a;
+  --primary-hover: #fbaf85;
+  --neutral-main: #f1f1f1;
+  --neutral-light: #fafafa;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+
+    --primary: #d87d4a;
+    --primary-hover: #fbaf85;
+    --neutral-main: #f1f1f1;
+    --neutral-light: #fafafa
   }
 }
 
